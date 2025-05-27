@@ -1,0 +1,163 @@
+[gd_scene load_steps=19 format=3 uid="uid://c7bcky0cwyn8k"]
+
+[ext_resource type="Script" path="res://scripts/player.cs" id="1_37ye8"]
+[ext_resource type="Texture2D" uid="uid://bs5u6qq4sfvkn" path="res://textures/player6.png" id="1_75ghn"]
+[ext_resource type="Texture2D" uid="uid://sfurvy6w6ulw" path="res://textures/bg.png" id="2_d2ixw"]
+[ext_resource type="Shader" uid="uid://dst32go5abg80" path="res://textures/new_shader.tres" id="2_gdstf"]
+[ext_resource type="Texture2D" uid="uid://chx8xlr4f285e" path="res://textures/player0.png" id="2_jdt2a"]
+[ext_resource type="Texture2D" uid="uid://cj2ax6pqqx8g" path="res://textures/player1.png" id="3_aplkb"]
+[ext_resource type="Texture2D" uid="uid://y04rpsbhausa" path="res://textures/player2.png" id="4_txg17"]
+[ext_resource type="Texture2D" uid="uid://hbjyldx46lux" path="res://textures/player7.png" id="5_rvrxw"]
+[ext_resource type="Texture2D" uid="uid://ctdifd1ueiaei" path="res://textures/player3.png" id="5_w50wv"]
+[ext_resource type="Texture2D" uid="uid://di8q3mfyv86cy" path="res://textures/player4.png" id="6_q4y4v"]
+[ext_resource type="Texture2D" uid="uid://b5y4iyucmusyv" path="res://textures/player5.png" id="7_hqyjh"]
+[ext_resource type="AudioStream" uid="uid://bn5djmh6ufnon" path="res://sounds/shot.wav" id="11_82kj6"]
+[ext_resource type="AudioStream" uid="uid://ct1eo6y43064w" path="res://sounds/stepquestion.wav" id="12_8hmuy"]
+[ext_resource type="Texture2D" uid="uid://cs0p8s0v1mmnv" path="res://textures/rifleround.png" id="14_8hlrc"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_q57k0"]
+size = Vector2(4, 12)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_w0xgj"]
+shader = ExtResource("2_gdstf")
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_w1fd2"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_75ghn")
+}, {
+"duration": 0.1,
+"texture": ExtResource("5_rvrxw")
+}],
+"loop": true,
+"name": &"aim",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_jdt2a")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_jdt2a")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_jdt2a")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_aplkb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_aplkb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_aplkb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_aplkb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_aplkb")
+}],
+"loop": true,
+"name": &"default",
+"speed": 2.5
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_txg17")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_w50wv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_txg17")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_w50wv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_q4y4v")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_hqyjh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_q4y4v")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_hqyjh")
+}],
+"loop": true,
+"name": &"walking",
+"speed": 2.5
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_emar2"]
+size = Vector2(4, 12)
+
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("fakeray", "rotateable", "anim", "shotsfx", "stepsfx", "rifleroundpng", "realray") groups=["player"]]
+scale = Vector2(5, 5)
+script = ExtResource("1_37ye8")
+fakeray = NodePath("CollisionShape2D/RayCast2D/Sprite2D")
+rotateable = NodePath("CollisionShape2D")
+anim = NodePath("CollisionShape2D/AnimatedSprite2D")
+shotsfx = NodePath("sfx/shot")
+stepsfx = NodePath("sfx/step")
+rifleroundpng = NodePath("Rifleround")
+realray = NodePath("CollisionShape2D/RayCast2D")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_q57k0")
+
+[node name="RayCast2D" type="RayCast2D" parent="CollisionShape2D"]
+position = Vector2(3, 0)
+target_position = Vector2(250, 0)
+hit_from_inside = true
+
+[node name="Sprite2D" type="Sprite2D" parent="CollisionShape2D/RayCast2D"]
+modulate = Color(1, 0, 0, 0.611765)
+self_modulate = Color(1, 0, 0, 1)
+z_index = 1
+z_as_relative = false
+material = SubResource("ShaderMaterial_w0xgj")
+position = Vector2(57.05, 0.47)
+scale = Vector2(0.735, 0.003)
+texture = ExtResource("2_d2ixw")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="CollisionShape2D"]
+sprite_frames = SubResource("SpriteFrames_w1fd2")
+
+[node name="frametimer" type="Timer" parent="CollisionShape2D/AnimatedSprite2D"]
+wait_time = 0.4
+autostart = true
+
+[node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="sfx" type="Node" parent="."]
+
+[node name="shot" type="AudioStreamPlayer" parent="sfx"]
+stream = ExtResource("11_82kj6")
+volume_db = -10.0
+
+[node name="step" type="AudioStreamPlayer" parent="sfx"]
+stream = ExtResource("12_8hmuy")
+
+[node name="Rifleround" type="Sprite2D" parent="."]
+modulate = Color(1, 1, 1, 0.788235)
+z_index = 1
+position = Vector2(185, -95)
+texture = ExtResource("14_8hlrc")
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(0, -3.8147e-07)
+shape = SubResource("RectangleShape2D_emar2")
+
+[node name="kill" type="Timer" parent="."]
+wait_time = 0.05
+
+[connection signal="timeout" from="CollisionShape2D/AnimatedSprite2D/frametimer" to="." method="_on_frametimer_timeout"]
+[connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]
+[connection signal="timeout" from="kill" to="." method="_on_kill_timeout"]

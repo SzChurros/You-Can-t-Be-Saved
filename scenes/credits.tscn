@@ -1,0 +1,18 @@
+[gd_scene load_steps=2 format=3 uid="uid://4v3th6ehfocd"]
+
+[ext_resource type="VideoStream" path="res://creds.ogv" id="1_odj4k"]
+
+[node name="Credits" type="Node2D"]
+
+[node name="Label" type="Label" parent="."]
+offset_left = 451.0
+offset_top = 274.0
+offset_right = 491.0
+offset_bottom = 297.0
+text = "Just quit the game or something"
+
+[node name="VideoStreamPlayer" type="VideoStreamPlayer" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
+stream = ExtResource("1_odj4k")
+autoplay = true

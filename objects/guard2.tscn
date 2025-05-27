@@ -1,0 +1,79 @@
+[gd_scene load_steps=8 format=3 uid="uid://drivcsv728wkj"]
+
+[ext_resource type="Script" path="res://scripts/guard2.cs" id="1_5rwxq"]
+[ext_resource type="Texture2D" uid="uid://1wrvwkjpmftx" path="res://textures/guard2.png" id="2_v8c8l"]
+[ext_resource type="Texture2D" uid="uid://lctf7oprewcg" path="res://textures/guard3.png" id="3_f2tqy"]
+[ext_resource type="AudioStream" uid="uid://ct1eo6y43064w" path="res://sounds/stepquestion.wav" id="4_ch3hb"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_q57k0"]
+size = Vector2(4, 12)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_w1fd2"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_v8c8l")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_f2tqy")
+}],
+"loop": true,
+"name": &"default",
+"speed": 2.5
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_6no2o"]
+radius = 126.427
+
+[node name="Guard" type="CharacterBody2D" node_paths=PackedStringArray("rotateable", "stepsfx", "realray", "weapontimer") groups=["2hitkill"]]
+scale = Vector2(5, 5)
+script = ExtResource("1_5rwxq")
+rotateable = NodePath("rotateable")
+stepsfx = NodePath("sfx/step")
+realray = NodePath("rotateable/RayCast2D")
+weapontimer = NodePath("rotateable/RayCast2D/Timer")
+
+[node name="rotateable" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_q57k0")
+
+[node name="RayCast2D" type="RayCast2D" parent="rotateable"]
+position = Vector2(3, 0)
+target_position = Vector2(75, 0)
+hit_from_inside = true
+
+[node name="Timer" type="Timer" parent="rotateable/RayCast2D"]
+wait_time = 2.5
+one_shot = true
+
+[node name="sprite" type="AnimatedSprite2D" parent="rotateable"]
+sprite_frames = SubResource("SpriteFrames_w1fd2")
+
+[node name="sfx" type="Node" parent="."]
+
+[node name="step" type="AudioStreamPlayer" parent="sfx"]
+stream = ExtResource("4_ch3hb")
+volume_db = -10.0
+
+[node name="Area2D" type="Area2D" parent="."]
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" groups=["1hitkill"]]
+shape = SubResource("CircleShape2D_6no2o")
+
+[node name="stepsfx" type="Timer" parent="."]
+wait_time = 2.0
+autostart = true
+
+[node name="death" type="Timer" parent="."]
+wait_time = 5.0
+
+[node name="damage" type="Timer" parent="."]
+wait_time = 0.05
+one_shot = true
+
+[connection signal="timeout" from="rotateable/RayCast2D/Timer" to="." method="_on_timer_timeout"]
+[connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]
+[connection signal="area_exited" from="Area2D" to="." method="_on_area_2d_area_exited"]
+[connection signal="timeout" from="stepsfx" to="." method="_on_stepsfx_timeout"]
+[connection signal="timeout" from="death" to="." method="_on_death_timeout"]
+[connection signal="timeout" from="damage" to="." method="_on_special_timeout"]

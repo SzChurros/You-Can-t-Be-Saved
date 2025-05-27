@@ -1,0 +1,41 @@
+[gd_scene load_steps=6 format=3 uid="uid://cqgamix6f8juu"]
+
+[ext_resource type="Script" path="res://scripts/dummy.cs" id="1_86bw4"]
+[ext_resource type="Texture2D" uid="uid://bfu47paqa6k2b" path="res://textures/dummy.png" id="1_md3d1"]
+[ext_resource type="Texture2D" uid="uid://b6up1xeh50x28" path="res://textures/dummy1.png" id="3_d5anw"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_evxer"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_md3d1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_d5anw")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_du677"]
+size = Vector2(20, 60)
+
+[node name="Dummy" type="CharacterBody2D" groups=["1hitkill"]]
+script = ExtResource("1_86bw4")
+
+[node name="rotateable" type="Node2D" parent="."]
+
+[node name="sprite" type="AnimatedSprite2D" parent="rotateable"]
+scale = Vector2(5, 5)
+sprite_frames = SubResource("SpriteFrames_evxer")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_du677")
+
+[node name="death" type="Timer" parent="."]
+wait_time = 5.0
+
+[node name="special" type="Timer" parent="."]
+
+[connection signal="timeout" from="death" to="." method="_on_timer_timeout"]
